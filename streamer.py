@@ -49,31 +49,31 @@ def main():
                     followers_count = user_lookup[0]['followers_count']
                     following_count = user_lookup[0]['friends_count']
                     ratio = followers_count / following_count
-                    tweet = line[line.find(colon) + 2 : len(line)]
+                    tweet = line[line.find(colon) + 2 : len(line)
+
+                    summary['username'] = username
+                    summary['followers_count'] = followers_count
+                    summary['following_count'] = following_count
+                    summary['ratio'] = ratio
                     if(re.search(r'http\S+', tweet)):
                         summary['hasLink'] = True
                         tweet = re.sub(r'http\S+', '', tweet)
 
                     else:
                         summary['hasLink'] = False
-
-                    summary['username'] = username
-                    summary['followers_count'] = followers_count
-                    summary['following_count'] = following_count
-                    summary['ratio'] = ratio
                     summary['tweet_content'] = tweet
                     summary['trend'] = top_trending
                     summary_json = json.dumps(summary)
                     tweet_summaries.append(summary_json)
                     # DEBUGGING STATEMENTS to see continuous tweets coming from streamer
-                    print(username)
-                    print(tweet)
-                    print(data['text'].encode('utf-8'))
-                    print(line[line.find(colon) + 2 : len(line)])
-                    print(followers_count)
-                    print(following_count)
-                    print(ratio)
-                    print(len(tweet_summaries))
+                    #print(username)
+                    #print(tweet)
+                    #print(data['text'].encode('utf-8'))
+                    #print(line[line.find(colon) + 2 : len(line)])
+                    #print(followers_count)
+                    #print(following_count)
+                    #print(ratio)
+                    #print(len(tweet_summaries))
                 if(len(tweet_summaries) == 15):
                     # Instead of printing, I guess you start using tweet_summaries here in a different function
                     print_summary(tweet_summaries)
