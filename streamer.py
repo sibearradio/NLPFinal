@@ -24,6 +24,7 @@ def main():
     # Using the first trend from trending. If you want to use second trending
     # ex: top trending = trending[0]['trends'][1]['name']
     top_trending = trending[0]['trends'][0]['name']
+    output = open('tweets.txt', 'a')
 
     def print_summary(summary):
         pprint.pprint(summary)
@@ -43,7 +44,7 @@ def main():
                 # sometimes connection breaks because we fall behind in getting the tweets (network related issue?)
                 # Number of tweets surveyed is limited to 15 for now but you can change
                 # len(username) < 15 is Twitter's max for username length
-                if(username and at in line and colon in line and len(username) < 15 and len(tweet_summaries) < 30):
+                if(username and at in line and colon in line and len(username) < 15 and len(tweet_summaries) < 50):
                     summary = {}
                     user_lookup = twitter.lookup_user(screen_name=username)
                     followers_count = user_lookup[0]['followers_count']
@@ -51,21 +52,28 @@ def main():
                     ratio = followers_count / following_count
                     tweet = line[line.find(colon) + 2 : len(line)]
 
+                    output.write(username + "\n")
+                    output.write(str(followers_count) + "\n")
+                    output.write(str(following_count) + "\n")
+                    output.write(str(ratio) + "\n")
                     summary['username'] = username
                     summary['followers_count'] = followers_count
                     summary['following_count'] = following_count
                     summary['ratio'] = ratio
                     if(re.search(r'http\S+', tweet)):
-                        summary['hasLink'] = True
+                        output.write("true\n")
                         tweet = re.sub(r'http\S+', '', tweet)
 
                     else:
-                        summary['hasLink'] = False
+                        output.write("false\n")
+                    tweet = re.sub('\n', '', tweet)
+                    output.write(tweet + "\n")
                     summary['tweet_content'] = tweet
+                    output.write(top_trending + "\n" )
                     summary['trend'] = top_trending
                     summary_json = json.dumps(summary)
                     tweet_summaries.append(summary_json)
-                    # DEBUGGING STATEMENTS to see continuous tweets coming from streamer
+                    #DEBUGGING STATEMENTS to see continuous tweets coming from streamer
                     #print(username)
                     #print(tweet)
                     #print(data['text'].encode('utf-8'))
@@ -74,9 +82,10 @@ def main():
                     #print(following_count)
                     #print(ratio)
                     #print(len(tweet_summaries))
-                if(len(tweet_summaries) == 30):
+                if(len(tweet_summaries) == 50):
                     # Instead of printing, I guess you start using tweet_summaries here in a different function
                     print_summary(tweet_summaries)
+                    output.close()
                     streamer.disconnect()
 
 
