@@ -43,13 +43,13 @@ def main():
                 # sometimes connection breaks because we fall behind in getting the tweets (network related issue?)
                 # Number of tweets surveyed is limited to 15 for now but you can change
                 # len(username) < 15 is Twitter's max for username length
-                if(username and at in line and colon in line and len(username) < 15 and len(tweet_summaries) < 15):
+                if(username and at in line and colon in line and len(username) < 15 and len(tweet_summaries) < 30):
                     summary = {}
                     user_lookup = twitter.lookup_user(screen_name=username)
                     followers_count = user_lookup[0]['followers_count']
                     following_count = user_lookup[0]['friends_count']
                     ratio = followers_count / following_count
-                    tweet = line[line.find(colon) + 2 : len(line)
+                    tweet = line[line.find(colon) + 2 : len(line)]
 
                     summary['username'] = username
                     summary['followers_count'] = followers_count
@@ -74,7 +74,7 @@ def main():
                     #print(following_count)
                     #print(ratio)
                     #print(len(tweet_summaries))
-                if(len(tweet_summaries) == 15):
+                if(len(tweet_summaries) == 30):
                     # Instead of printing, I guess you start using tweet_summaries here in a different function
                     print_summary(tweet_summaries)
                     streamer.disconnect()
